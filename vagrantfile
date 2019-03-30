@@ -1,0 +1,37 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = 'ubuntu/trusty64'
+  config.vm.hostname = 'monkey-business'
+
+  # Sync clock with host machine.
+  # config.vm.provider 'virtualbox' do |vb|
+  #   vb.customize ['guestproperty',
+  #                 'set',
+  #                 :id,
+  #                 '/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold',
+  #                 10000]
+  # end
+
+  # Forward a few ports to use when testing from host machine.
+  10.times do |n|
+    config.vm.network 'forwarded_port',
+                      guest: 3000 + n,
+                      host: 4000 + n
+  end
+
+  # Use SSH keys from host machine.
+  config.ssh.forward_agent = true
+
+  # Use Git config from host machine.
+  config.vm.provision 'file',
+                      source: '~/.gitconfig',
+                      destination: '.gitconfig'
+
+  # Use Heroku credentials from host machine.
+  config.vm.provision 'file',
+                      source: '~/.netrc',
+                      destination: '.netrc'
+
+  config.vm.provision :shell,
+                      path: 'bootstrap.sh',
+                      privileged: false
+end
