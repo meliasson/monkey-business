@@ -1,3 +1,7 @@
+# Upgrade packages.
+sudo apt-get -y update
+sudo apt-get -y upgrade
+
 # Set time zone.
 sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
 
